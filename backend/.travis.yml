@@ -1,0 +1,23 @@
+language: generic
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t ijaysong/react-test-app -f ./frontend/Dockerfile.dev ./frontend
+
+script:
+  - docker run -e CI=true ijaysong/react-test-app npm run test
+
+after_success:
+  - docker build -t ijaysong/docker-frontend ./frontend
+  - docker build -t ijaysong/docker-backend ./backend
+  - docker build -t ijaysong/docker-nginx ./nginx
+
+  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
+
+  - docker push ijaysong/docker-frontend
+  - docker push ijaysong/docker-backend
+  - docker push ijaysong/docker-nginx
