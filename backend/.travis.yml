@@ -21,3 +21,13 @@ after_success:
   - docker push ijaysong/docker-frontend
   - docker push ijaysong/docker-backend
   - docker push ijaysong/docker-nginx
+
+  deploy:
+   provider: elasticBeanstalk
+   region: "ap-northeast-2"
+   app: "docker-fullstack-app"
+   env: DockerFullstackApp-env
+   bucket_name: elasticbeanstalk-ap-northeast-2-306476627547
+   bucket_path: "docker-fullstak-app"
+   on:
+       branch: main
